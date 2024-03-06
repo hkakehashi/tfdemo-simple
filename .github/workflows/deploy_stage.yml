@@ -1,0 +1,27 @@
+name: "Deploy Stage"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "stage/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "stage/**"
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "Terraform command to run"
+        type: choice
+        options:
+          - plan
+          - apply
+
+jobs:
+  run-terraform:
+    uses: ./.github/workflows/run_terraform.yml
+    with:
+      working-directory: stage/
+      command: ${{ github.event.inputs.command }}
+    secrets: inherit
